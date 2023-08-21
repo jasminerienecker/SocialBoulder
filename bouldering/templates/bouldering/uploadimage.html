@@ -1,0 +1,87 @@
+{% extends "bouldering/header.html" %}
+
+{% block room %}
+   <div id="app" class="container-fluid">
+     <form method="POST" enctype="multipart/form-data">
+    	{% csrf_token %}
+      <div class="row form-row">
+        <input class="form-control" type="file" name="Image" id="Image" onchange="preview()">
+      </div>
+      <img id="frame" src="" class="img-fluid" />
+
+  		<div v-for="row in rows">
+				<div class="row form-row">
+						<div class="col-sm-auto">
+							<select v-model="row.grade_name" class="form-select">
+                <option selected>Route Grade</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+							</select>
+						</div>
+						<div class="col-sm-auto">
+							<input type="text" class="form-control" v-model="row.colour_name" placeholder="Route Colour">
+						</div>
+						<div class="col-xs">
+							<button class="btn btn-danger float-end" @click="deleteRow(row)">
+                <i class="fa-solid fa-trash py-1"></i>
+              </button>
+						</div>
+				</div>
+  		</div>
+  		<div class="row ps-4">
+          <input type="hidden" v-model="extra_field_count" class="form-control" name="extra_field_count">
+          <input type="hidden" v-model="add_button_clicked" class="form-control" name="add_button_clicked">
+          {% verbatim %}
+            <div v-for="row in rows">
+              <input type="hidden" v-model="row.grade_name" name="grade_{{ row.index }}" class="form-control">
+              <input type="hidden" v-model="row.colour_name" name="colour_{{ row.index }}" class="form-control">
+            </div>
+          {% endverbatim %}
+        <div class="btn-group" role="group" style="width: 250px;">
+          <button type="submit" class="btn btn-info">Submit</button>
+  				<button type="button" class="btn btn-info" @click="addRow">Add Row</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+   <script>
+     new Vue({
+     	el: '#app',
+     	data: {
+     		rows: [
+     			{ 'grade_name': '', 'colour_name': '', 'index': 0 }
+     		],
+        extra_field_count: 0
+     	},
+     	methods: {
+     		addRow: function() {
+          this.extra_field_count++;
+     			this.rows.push({'grade_name': '', 'colour_name': '', 'index': this.extra_field_count });
+     		},
+     		deleteRow: function(row) {
+     			this.rows.$remove(row);
+          this.extra_field_count = this.extra_field_count - 1;
+          new_rows = [];
+          this.rows.forEach((curr_row, i) => {
+            new_row = { 'grade_name': curr_row.grade_name, 'colour_name': curr_row.colour_name, 'index': i };
+            new_rows.push(new_row);
+          });
+          this.rows = new_rows;
+     		}
+     	}
+     })
+
+     function preview() {
+          frame.src = URL.createObjectURL(event.target.files[0]);
+      }
+ </script>
+{% endblock %}

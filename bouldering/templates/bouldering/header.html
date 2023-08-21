@@ -1,0 +1,98 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  <script src="https://kit.fontawesome.com/834c1199a6.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.js"></script>
+  <style>
+    body {
+      padding-top: 70px;
+    }
+    nav {
+      background-color: #021691;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    .navbar-brand {
+      color: #FFFFFF;
+    }
+    .container-sm {
+      background-color: #ddeeff;
+      border-radius: 25px;
+    }
+    .btn-primary {
+      padding: 22px 4px;
+    }
+    .btn-outline-dark {
+      position: absolute;
+      bottom: 5%;
+      right: 5%;
+    }
+    .justify-content-center .col-sm-auto {
+      position: relative;
+    }
+    .col-sm-auto .row{
+      padding: 2px;
+    }
+    .form-row {
+      border:  1px solid #e2e2e2;
+      margin:  10px;
+      padding: 20px;
+      background: #ddeeff;
+    }
+    .btn-group .btn {
+      width: 50px;
+    }
+    #Image::before {
+      content: "Select Photo of Wall";
+      position: absolute;
+      z-index: 2;
+      background-color:	#808080;
+    }
+    #Image::file-selector-button {
+      background-color: #808080;
+      content: "Select Photo";
+      width: 170px;
+    }
+  </style>
+</head>
+<body>
+  <div class="m-4">
+    <nav class="navbar fixed-top navbar-expand-lg">
+      <div class="container-fluid">
+        <a href="{% url 'bouldering:room' %}" class="navbar-brand">Climb Hit List</a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <div class="navbar-nav">
+            <a href="{% url 'bouldering:room' %}" class="nav-item nav-link active" style="color: #FFFFFF;">Home</a>
+            <a href="#" class="nav-item nav-link" style="color: #FFFFFF;">Profile</a>
+          </div>
+          <div class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+              <a href="{% url 'logout' %}" class="nav-item nav-link" style="color: #FFFFFF;">Logout</a>
+            {% else %}
+              <a href="{% url 'login' %}?next={{ request.path }}" class="nav-item nav-link" style="color: #FFFFFF;">Login</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div id="room">
+      {% block room %}
+      {% endblock %}
+    </div>
+    <div id="wallphoto">
+      {% block wallphoto %}
+      {% endblock %}
+    </div>
+  </div>
+</body>
+</html>

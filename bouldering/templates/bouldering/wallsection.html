@@ -1,0 +1,39 @@
+{% extends "bouldering/room.html" %}
+
+{% block wallphoto %}
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-sm-auto">
+      <img src="{{ wall_section.image.url }}" class="rounded" alt="Wall Section">
+      <button class="btn btn-outline-dark btn-lg" type="button" onclick="location.href='{% url 'bouldering:upload_image' wall_section.id %}'">
+        <i class="fa-solid fa-pen-to-square"></i>
+      </button>
+    </div>
+    <div class="col-sm-auto">
+    {% for route in wall_section.route_set.all %}
+      {% if user.is_authenticated %}
+          {% if user in route.users.all %}
+            <div class="row">
+              <button type="button" class="btn btn-success" onclick="location.href='{% url 'bouldering:remove_send' route.pk user.pk %}?next={{ request.path }}'">
+                Lv{{route.grade}} {{route.colour}} &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-circle-check"></i>
+              </button>
+            </div>
+          {% else %}
+            <div class="row">
+              <button type="button" class="btn btn-outline-secondary" onclick="location.href='{% url 'bouldering:add_send' route.pk user.pk %}?next={{ request.path }}'">
+                Lv{{route.grade}} {{route.colour}}&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-circle-check"></i>
+              </button>
+            </div>
+          {% endif %}
+      {% else %}
+        <div class="row">
+          <button type="button" class="btn btn-outline-secondary" disabled>
+            Lv{{route.grade}} {{route.colour}}&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-circle-check"></i>
+          </button>
+        </div>
+      {% endif %}
+    {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
